@@ -1,11 +1,19 @@
-
+const express = require("express");
+const cookieParser = require("cookie-parser");
 
 const middlewares = (app)=>{
 
 
-    app.use((err,req,res,next)=>{
+    app.use(express.json());
+    app.use(cookieParser())
 
-        console.log("middleware is working fine");
+    app.use((req,res,next)=>{
+
+        req.loginUser = req.cookies.currentUser;
+        req.token  = req.cookies.token; 
+
+        // console.log(req.token)
+
 
         next();
     });

@@ -8,10 +8,19 @@ const app = express();
 
 const port = 8080;
 
+const userRouter = require("./routes/userRoutes");
+
+const postRouter = require("./routes/postRoutes");
+
 
 dataBaseConnection();
 
 middlewares(app);
+
+
+app.use("/",userRouter);
+
+app.use("/",postRouter);
 
 
 

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema({
 
-    contnet:{
+    content:{
         type:String,
         required:true
     },
@@ -28,13 +28,13 @@ const postSchema = new mongoose.Schema({
 
     shares:[
         {
-        types:mongoose.Schema.types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"shareModel"
         }
     ],
 
     owner:{
-        types:mongoose.Schema.types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"userModel"
        
     },

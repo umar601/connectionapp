@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema({
     }
 
 
-})
+});
 
 
 const userModel = mongoose.model("userModel",userSchema);  //first is model name and second is schema name

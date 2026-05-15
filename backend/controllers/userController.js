@@ -12,16 +12,13 @@ const userSignup = async (req,res)=>{
 
     //checking account already exist or not 
 
-
-    // console.log(req.body)
-    // res.send("goog")
     try{
 
     let isAccountFound = await userModel.findOne({username:req.body.username});
 
     //if account is not found then 
 
-    if(!isAccountFound){  //find return array
+    if(!isAccountFound){ 
 
         const salt = await bcrypt.genSalt(10);
         const hashPassword  = await bcrypt.hash(req.body.password,salt);
@@ -56,16 +53,18 @@ const userSignup = async (req,res)=>{
             {expiresIn:"1h"}
         )
 
-        //storing in cookie
+        //storing token in cookie
 
         res.cookie("token",generatedToken,{
             httpOnly:true,
-            maxAge:60*60*1000
+            maxAge:2*60*1000 
         })
+
+        //storing user in toknen
 
         res.cookie("currentUser",newUser,{
                 httpOnly:true,
-                maxAge:60*60*1000           //for one hour 
+                maxAge:2*60*1000           //for one hour 
         })
 
 
@@ -131,15 +130,15 @@ const userLogin  = async (req,res) => {
 
             res.cookie("token",generatedToken,{
                 httpOnly:true,
-                maxAge:60*60*1000           //for one hour 
+                maxAge:2*60*1000            //for one hour 
             })
+
+            //storing user in cookie
 
             res.cookie("currentUser",isUserFound,{
                 httpOnly:true,
-                maxAge:60*60*1000           //for one hour 
+                maxAge:2*60*1000           //for one hour 
             })
-            
-            console.log(req.cookies)
 
             // login succesfull
 

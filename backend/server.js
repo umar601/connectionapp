@@ -27,12 +27,16 @@ app.use("/",postRouter);
 app.use("/",(req,res)=>{
 
     res.send("hello from backend");
+    
 });
 
 app.listen(port,(req,res)=>{
 
     console.log(`server is running on port ${port}`);
 
+
 });
+
+
 
 

@@ -12,11 +12,15 @@ const middlewares = (app)=>{
         req.loginUser = req.cookies.currentUser;
         req.token  = req.cookies.token; 
 
-        // console.log(req.token)
+         
 
-
+    
         next();
     });
+
+
+    // console.log(req.token)
+    // console.log(req.loginUser)
 
 
 

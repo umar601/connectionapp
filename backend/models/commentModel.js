@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const commentSchema = new mongoose.Schema({
 
-    contnet:{
+    content:{
         type:String,
         required:true
     },
@@ -13,13 +13,13 @@ const commentSchema = new mongoose.Schema({
     },
 
     owner:{
-        type:mongoose.Schema.types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"userModel"
        
     },
 
     post:{
-        type:mongoose.Schema.types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"postModel"
        
     },

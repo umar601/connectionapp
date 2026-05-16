@@ -1,11 +1,12 @@
-//add post by user id 
-//delete post by userid and post id 
-//show post all 
-//see post user wise 
+//add post by user id  (done)
+//delete post by userid and post id  (done)
+//show post all  (done)
+//see post user wise  (done)
 
 
 let postModel = require("../models/postModel");
 let userModel = require("../models/userModel");
+let commentModel = require("../models/commentModel");
 
 
 //ading post of user 
@@ -33,7 +34,6 @@ const addPost  = async (req,res)=>{
     userToAddPost.posts.push(newPost);
 
     await userToAddPost.save();
-
 
 
     res.status(200).json({message:"post added successful"});
@@ -94,6 +94,9 @@ let seePostUserWise = async (req,res)=>{
 }
 
 
+
+
+
 let deletPost = async (req,res)=>{
 
     //deleting post 
@@ -101,11 +104,11 @@ let deletPost = async (req,res)=>{
     try{
 
     
-    let postToDelete = await postModel.findByIdAndDelete(req.params.postId);
+    let postToDelete = await postModel.findOneAndDelete({_id:req.params.postId,owner:req.params.userId});
 
     if(!postToDelete){
 
-        return res.status(500).json({message:"post not found"})
+        return res.status(500).json({message:"post not found or user is not authorizee"})
     }
 
 
@@ -124,6 +127,32 @@ let deletPost = async (req,res)=>{
 
     }
 
+
+    //deleting all commenst from user when post delete
+
+    let  deletedComment = await commentModel.find({post:postToDelete._id})
+
+    // console.log(deletedComment)
+
+    for (i=0;i<deletedComment.length;i++){
+
+        await userModel.findOneAndUpdate(
+            {
+            _id:req.loginUser._id
+            },
+            {$pull:{comments:deletedComment[i]._id}}
+        )
+    }
+
+
+
+    //deleting all comments from commenst when post delete
+
+    await commentModel.deleteMany({post:postToDelete._id});
+
+
+
+
     res.status(200).json({message:"post deleted successfully"});
 
     }catch(err){
@@ -133,7 +162,6 @@ let deletPost = async (req,res)=>{
 
     //these are still remaining
 
-    // remove all comments
     //remove all reposts 
     //remove all shares
 

@@ -12,59 +12,7 @@ const {addPost, showPost,seePostUserWise,deletPost} = require("../controllers/po
 const jwt = require("jsonwebtoken");
 
 
-let verifyToken = async(req,res,next)=>{
-
-    // console.log(req.token)
-    // console.log(req.loginUser)
-
-    //if token not exit means the user is not verifie
-
-
-    try{
-
-    if(!req.token){
-
-        res.status(500).json({message:"not verified login first"});
-
-    }
-    else{
-
-    const token = req.token;
-
-    //verifyingtoken
-    
-    let decoded = jwt.verify(token,"secretKey");
-
-    // res.status(200).json({message:"verified"})
-    next();
-
-    }
-
-    }catch(err){
-        res.status(500).json({message:"erro in token verifying middleware",error,err});
-    }
-
-    
-}
-
-let authorizeRoute = (req,res,next)=>{
-
-    try{
-
-        let loginUser = req.loginUser;
-
-        if(loginUser._id==req.params.userId){
-
-            next()
-        }else{
-            res.status(500).json({message:"user is not authorize to see post"});
-        }
-
-
-    }catch(err){
-        res.status(500).json({message:"some error in authorization",error:err});
-    }
-}
+let {authorizeRoute,verifyToken} = require("../middlewares/middlewares");
 
 
 //add and show post

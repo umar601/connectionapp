@@ -1,5 +1,5 @@
-// post login 
-//post sign up
+// post login (done)
+//post sign up (done)
 
 
 const {userSignup,userLogin} = require("../controllers/userController");

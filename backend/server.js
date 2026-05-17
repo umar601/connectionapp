@@ -14,6 +14,8 @@ const postRouter = require("./routes/postRoutes");
 
 const commentRouter = require("./routes/commentRoutes");
 
+const connectionRouter = require("./routes/connectionRoutes");
+
 
 dataBaseConnection();
 
@@ -25,6 +27,8 @@ app.use("/",userRouter);
 app.use("/",postRouter);
 
 app.use("/",commentRouter);
+
+app.use("/",connectionRouter);
 
 
 

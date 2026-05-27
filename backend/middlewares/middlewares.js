@@ -74,13 +74,14 @@ let authorizeRoute = (req,res,next)=>{
 
         let loginUser = req.loginUser;
 
+        // console.log(req.body.userId)
         // console.log(loginUser)
 
-        if(loginUser._id==req.params.userId){
+        if(loginUser._id==req.params.userId||loginUser._id==req.body.userId){
 
             next()
         }else{
-            res.status(500).json({message:"user is not authorize to "});
+            res.status(500).json({message:"user is not authorize "});
         }
 
 

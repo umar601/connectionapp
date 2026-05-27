@@ -15,10 +15,12 @@ let {authorizeRoute,verifyToken} = require("../middlewares/middlewares");
 
 
 
-console.log(typeof(sendRequest))
 
 
-// connectionRouter.post("/request");
+
+connectionRouter.post("/request",verifyToken,authorizeRoute,sendRequest);
+
+connectionRouter.post("/request/accept",verifyToken,authorizeRoute,acceptRequest);
 
 module.exports = connectionRouter;
 

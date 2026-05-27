@@ -13,20 +13,39 @@ let userModel = require("../models/userModel");
 // send request 
 
 
+// the person who needs login to perform something must be user id for authorzation purpos
+
+
 let sendRequest = async (req,res)=>{
 
     try{
 
         //finding the sender and reciever 
 
-    let sendBy = await userModel.findById(req.params.sendBy);
-    let sendTo = await userModel.findById(req.params.sendTo);
+    let sendBy = await userModel.findById(req.body.userId);
+    let sendTo = await userModel.findById(req.body.sendTo);
 
         //checing weather they exist 
 
     if(!sendTo || !sendBy){
 
         return res.status(500).json({message:"something wrong in fetching sender or reciever"});
+    }
+
+    // console.log(sendTo._id)
+    // console.log(sendBy._id)
+
+    let isRequestFound = await connectionModel.findOne(
+    
+        {sendTo:sendTo._id},
+        {sendBy:sendBy._id}
+    )
+
+    // console.log(isRequestFound)
+
+    if(isRequestFound){
+
+        return res.status(500).json({message:"request already exist "});
     }
 
 
@@ -49,7 +68,16 @@ let sendRequest = async (req,res)=>{
 }
 
 
-// accept request 
+// accept request
+
+//things to do 
+
+//we have to check weather reuqest exist or not 
+//once updated its should not twice updated 
+
+//status is not updating 
+
+//filled mnay times in user if he accept multiple times 
 
 let acceptRequest = async(req,res)=>{
 
@@ -57,8 +85,8 @@ let acceptRequest = async(req,res)=>{
 
         //updating status weather accepted or rejected
 
-    let sendBy = await userModel.findById(req.params.sendBy);
-    let sendTo = await userModel.findById(req.params.sendTo);
+    let sendBy = await userModel.findById(req.body.sendBy);
+    let sendTo = await userModel.findById(req.body.userId);
 
     //checing weather they exist 
 
@@ -71,15 +99,9 @@ let acceptRequest = async(req,res)=>{
 
         await connectionModel.findOneAndUpdate(
 
-        {
-            //find
-        $and:
-        [
             {sendTo:req.params.sendTo},
-            {sendBy:req.params.sendBy}
-        ],
+            {sendBy:req.params.sendBy},
 
-        },
             
         {
             //update

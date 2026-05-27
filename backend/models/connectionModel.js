@@ -3,13 +3,13 @@ const mongoose = require("mongoose");
 const connectionShema = new mongoose.Schema({
 
     sendTo:{
-        type:mongoose.Schema.types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"userModel",
         required:true
     },
 
     SendBy:{
-        type:mongoose.Schema.types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"userModel",
         required:true
     },

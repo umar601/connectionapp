@@ -9,18 +9,16 @@ let express = require("express");
 
 let connectionRouter = express.Router();
 
-let {sendRequest,acceptRequest,rejectRequest,seeSendRequest,seeRequestRecieved,seeConnections} = require("../controllers/commentController");
+let {sendRequest,acceptRequest,rejectRequest,seeSendRequest,seeRequestRecieved,seeConnections} = require("../controllers/connectionController");
+
+let {authorizeRoute,verifyToken} = require("../middlewares/middlewares");
 
 
-//by ai right might be wrong but i think we can use post request for send,accept and reject request and get request for see send request,see recieved request and see connections by userid
 
-// connectionRouter.post("/sendRequest",sendRequest);
-// connectionRouter.post("/acceptRequest",acceptRequest);
-// connectionRouter.delete("/rejectRequest",rejectRequest);
-// connectionRouter.get("/seeSendRequest/:id",seeSendRequest);
-// connectionRouter.get("/seeRequestRecieved/:id",seeRequestRecieved);
-// connectionRouter.get("/seeConnections/:id",seeConnections);
+console.log(typeof(sendRequest))
 
+
+// connectionRouter.post("/request");
 
 module.exports = connectionRouter;
 

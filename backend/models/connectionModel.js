@@ -8,7 +8,7 @@ const connectionShema = new mongoose.Schema({
         required:true
     },
 
-    SendBy:{
+    sendBy:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"userModel",
         required:true

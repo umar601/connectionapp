@@ -1,8 +1,8 @@
-//post request send
-//post request accept or reject 
-//get added requests by userid 
-//get send request by userid 
-//get recieved request by userid 
+//post request send (done)
+//post request accept or reject  (done)
+//get added requests by userid  (done)
+//get send request by userid  (done)
+//get recieved request by userid  (done)
 
 
 let express = require("express");
@@ -21,6 +21,14 @@ let {authorizeRoute,verifyToken} = require("../middlewares/middlewares");
 connectionRouter.post("/request",verifyToken,authorizeRoute,sendRequest);
 
 connectionRouter.post("/request/accept",verifyToken,authorizeRoute,acceptRequest);
+
+connectionRouter.post("/request/reject",verifyToken,authorizeRoute,rejectRequest);
+
+connectionRouter.get("/request/send/:userId",verifyToken,authorizeRoute,seeSendRequest);
+
+connectionRouter.get("/request/recieved/:userId",verifyToken,authorizeRoute,seeRequestRecieved);
+
+connectionRouter.get("/request/connection/:userId",verifyToken,authorizeRoute,seeConnections);
 
 module.exports = connectionRouter;
 

@@ -3,13 +3,13 @@ const mongoose = require("mongoose");
 const repostSchema = new mongoose.Schema({
 
     post:{
-        type:mongoose.Schema.types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"postModel",
         required:true
     },
 
     repostBy:{
-        type:mongoose.Schema.types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"userModel",
         required:true
     },

@@ -13,7 +13,7 @@ let userModel = require("../models/userModel");
 // send request 
 
 
-// the person who needs login to perform something must be user id for authorzation purpos
+// the person who needs login to perform something must be user id for authorzation purpose
 
 
 let sendRequest = async (req,res)=>{
@@ -72,12 +72,15 @@ let sendRequest = async (req,res)=>{
 
 //things to do 
 
-//we have to check weather reuqest exist or not 
-//once updated its should not twice updated 
+//we have to check weather reuqest exist or not  (done)
 
-//status is not updating 
+//once updated its should not twice updated  (done)
 
-//filled mnay times in user if he accept multiple times 
+
+//status is not updating  (done)
+
+//filled mnay times in user if he accept multiple times  (done)
+
 
 let acceptRequest = async(req,res)=>{
 
@@ -97,19 +100,24 @@ let acceptRequest = async(req,res)=>{
 
     //updating the connection model
 
-        await connectionModel.findOneAndUpdate(
-
-            {sendTo:req.params.sendTo},
-            {sendBy:req.params.sendBy},
-
-            
-        {
-            //update
-            status:"accepted"
-        }
-
-        
+    let isRequestFound = await connectionModel.findOne({
+    
+        $and:[
+        {sendTo:sendTo._id},
+        {sendBy:sendBy._id},
+        {status:"pending"}
+        ]
+    }
     )
+
+    // console.log(isRequestFound)
+
+    if(isRequestFound){
+  
+
+        isRequestFound.status = "accepted"
+
+        await isRequestFound.save();
 
     //saving in user connections 
 
@@ -121,6 +129,11 @@ let acceptRequest = async(req,res)=>{
 
     res.status(200).json({message:`request accepted successfully`});
 
+    }
+    else{
+
+        res.status(500).json({message:"request not found"})
+    }
 
     }catch(err){
 
@@ -138,8 +151,8 @@ let rejectRequest = async(req,res)=>{
 
         //updating status weather accepted or rejected
 
-    let sendBy = await userModel.findById(req.params.sendBy);
-    let sendTo = await userModel.findById(req.params.sendTo);
+    let sendBy = await userModel.findById(req.body.sendBy);
+    let sendTo = await userModel.findById(req.body.userId);
 
     //checing weather they exist 
 
@@ -150,12 +163,37 @@ let rejectRequest = async(req,res)=>{
 
     //deleteing from connection model
 
-        await connectionModel.findOneAndDelete({
-            $and:[{sendTo:req.params.sendTo},{sendBy:req.params.sendBy}]
-        })
+    // console.log(sendTo._id)
+    // console.log(sendBy._id)
+
+    let isRequestFound = await connectionModel.findOne(
+    
+        
+        {sendTo:sendTo._id},
+        {sendBy:sendBy._id},
+        {status:"pending"}
+    
+    
+    )
+
+    // console.log(isRequestFound)
+
+    if(isRequestFound){
+
+        await connectionModel.findOneAndDelete(
+        
+                {sendTo:sendTo},
+                {sendBy:sendBy}
+            )
 
 
     res.status(200).json({message:`request rejected successfully`});
+
+    }
+    else{
+
+        res.status(500).json({message:"request not found"})
+    }
 
 
     }catch(err){
@@ -173,9 +211,26 @@ let seeSendRequest = async(req,res)=>{
 
     try{
 
-        let fetchedRequests = await connectionModel.find({sendBy:req.params.sendBy});
+    let sendBy = await userModel.findById(req.params.userId);
 
-        res.status(200).json({message:"fecthed sucessfully ",requests:fetchedRequests})
+    //checing weather they exist 
+
+    if(!sendBy){
+
+        return res.status(500).json({message:"something wrong in fetching sender "});
+    }
+
+    // console.log(sendBy._id)
+
+    let fetchedRequests = await connectionModel.find(
+        
+        {sendBy:sendBy._id,
+        status:"pending"}
+    )
+
+    // console.log(fetchedRequests)
+
+    res.status(200).json({message:"fecthed sucessfully ",requests:fetchedRequests})
 
 
     }catch(err){
@@ -192,7 +247,18 @@ let seeRequestRecieved = async(req,res)=>{
 
     try{
 
-        let fetchedRequests = await connectionModel.find({sendTo:req.params.sendTo});
+    let sendBy = await userModel.findById(req.params.userId);
+
+    //checing weather they exist 
+
+        if(!sendBy){
+
+        return res.status(500).json({message:"something wrong in "});
+    }
+
+        let fetchedRequests = await connectionModel.find({
+            sendTo:req.params.userId,
+            status:"pending"});
 
         res.status(200).json({message:"fecthed sucessfully ",requests:fetchedRequests})
 
@@ -210,21 +276,16 @@ let seeConnections = async(req,res)=>{
 
     try{
 
-        await connectionModel.find(
-            {
-                $and:
-                [
-                    {$or:
-                        [
-                            {sendTo:req.params.userId},
-                            {sendBY:req.params.userId}
-                        ]
-                    },
-                    {status:"accepted"}
-                ]
-            }
-            
-        )
+        let sendBy = await userModel.findById(req.params.userId);
+
+        if(!sendBy){
+
+        return res.status(500).json({message:"something wrong in "});
+    }
+
+    let connections = sendBy.connections;
+
+    res.status(200).json({message:"fecthec successfully ",connections:connections})
 
 
     }catch(err){

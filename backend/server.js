@@ -1,8 +1,8 @@
-const  express = require("express");
+const express = require("express");
 
 const dataBaseConnection = require("./connections/dataBaseConnection");
 
-const {middlewares}  = require("./middlewares/middlewares");
+const { middlewares } = require("./middlewares/middlewares");
 
 const app = express();
 
@@ -16,35 +16,26 @@ const commentRouter = require("./routes/commentRoutes");
 
 const connectionRouter = require("./routes/connectionRoutes");
 
+const repostRouter = require("./routes/repostRoutes");
 
 dataBaseConnection();
 
 middlewares(app);
 
+app.use("/", userRouter);
 
-app.use("/",userRouter);
+app.use("/", postRouter);
 
-app.use("/",postRouter);
+app.use("/", commentRouter);
 
-app.use("/",commentRouter);
+app.use("/", connectionRouter);
 
-app.use("/",connectionRouter);
+app.use("/",repostRouter);
 
-
-
-app.use("/",(req,res)=>{
-
-    res.send("hello from backend");
-    
+app.use("/", (req, res) => {
+  res.send("hello from backend");
 });
 
-app.listen(port,(req,res)=>{
-
-    console.log(`server is running on port ${port}`);
-
-
+app.listen(port, (req, res) => {
+  console.log(`server is running on port ${port}`);
 });
-
-
-
-

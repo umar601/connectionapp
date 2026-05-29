@@ -7,6 +7,7 @@
 let postModel = require("../models/postModel");
 let userModel = require("../models/userModel");
 let commentModel = require("../models/commentModel");
+const repostModel = require("../models/repostModel");
 
 
 //ading post of user 
@@ -146,11 +147,22 @@ let deletPost = async (req,res)=>{
 
 
 
-    //deleting all comments from commenst when post delete
+    //deleting all comments from comments when post delete
 
     await commentModel.deleteMany({post:postToDelete._id});
 
+    //deleting reposts
 
+    await repostModel.deleteMany({
+
+        post:req.params.postId
+    })
+
+    await userModel.findOneAndUpdate(
+
+        {_id:req.params.userId},
+        {$pull:{reposts:req.params.postId}}
+    )
 
 
     res.status(200).json({message:"post deleted successfully"});
@@ -162,8 +174,7 @@ let deletPost = async (req,res)=>{
 
     //these are still remaining
 
-    //remove all reposts 
-    //remove all shares
+    //remove all reposts (done)
 
     
 }

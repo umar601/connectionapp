@@ -1,11 +1,25 @@
-import './App.css'
+import Login from "./assets/pages/login"
+import SignUp from "./assets/pages/signup";
+import {Routes,Route,Link} from "react-router-dom";
+import HomePage from "./assets/pages/homepage";
 
 function App() {
  
 
   return (
+
     <>
-    <h1>hello frontend from linkedin app</h1>
+
+
+
+    <Routes>
+
+    <Route path="/login" element={<Login/>}/>
+    <Route path="/signup" element={<SignUp/>}/>
+    <Route path="/home" element={<HomePage/>}/>
+
+    </Routes>
+
     </>
   )
 }

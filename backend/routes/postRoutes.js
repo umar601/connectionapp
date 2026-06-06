@@ -21,7 +21,7 @@ let {authorizeRoute,verifyToken} = require("../middlewares/middlewares");
 postRouter
 .route("/post")
 .post(verifyToken,addPost)
-.get(verifyToken,showPost)
+.get(showPost)
 
 //see user wise post 
 

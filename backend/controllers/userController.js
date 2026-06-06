@@ -90,9 +90,13 @@ const userLogin  = async (req,res) => {
 
     try{
 
+        // console.log(req.body.username,req.body.password)
+
         //first checking weather the user exist or not 
 
         let isUserFound = await userModel.findOne({username:req.body.username});
+
+        // console.log(isUserFound)
 
         //if user exist 
 
@@ -104,6 +108,7 @@ const userLogin  = async (req,res) => {
             let isPasswordMatched = await bcrypt.compare(req.body.password,isUserFound.password);
 
             if(isPasswordMatched){
+        
 
             //making the token 
 
@@ -144,23 +149,44 @@ const userLogin  = async (req,res) => {
 
             res.status(200).json({message:"user login successful",token:generatedToken});
 
-            }   
+            }else{
+
+            res.status(401).json({message:"password is wrong"});
+
+            }
             
         }else{
 
-            res.status(500).json({message:"user not found"});
+            res.status(404).json({message:"user not found"});
 
 
         }
 
 
     }catch(err){
-        res.status(500).json({message:"some error in login ",error:err.message});
+        res.status(500).json({message:"some error in login ",error:err});
     }
     
 }
 
+const getMe = async (req, res) => {
+  try {
+    // req.loginUser is already set by your verifyToken middleware
+    let user = await userModel.findById(req.loginUser._id).select("-password"); // Exclude password from the response
+    
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
+    }
+
+    res.status(200).json({ user });
+
+  } catch (err) {
+    res.status(500).json({ message: "some error in fetching user", error: err });
+  }
+};
+
+module.exports = { userSignup, userLogin, getMe }; 
 
 
 
-module.exports = {userSignup,userLogin};
+

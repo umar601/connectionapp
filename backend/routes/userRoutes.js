@@ -2,7 +2,7 @@
 //post sign up (done)
 
 
-const {userSignup,userLogin,getMe} = require("../controllers/userController");
+const {userSignup,userLogin,getLoginUser} = require("../controllers/userController");
 const express = require("express");
 const userRouter = express.Router();
 const { verifyToken } = require("../middlewares/middlewares");
@@ -13,6 +13,8 @@ userRouter
 userRouter
 .post("/login",userLogin);
 
-userRouter.get("/me", verifyToken, getMe);
+userRouter.get("/me",verifyToken,getLoginUser);
+
+
 
 module.exports = userRouter;

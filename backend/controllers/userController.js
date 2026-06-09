@@ -169,23 +169,31 @@ const userLogin  = async (req,res) => {
     
 }
 
-const getMe = async (req, res) => {
-  try {
-    // req.loginUser is already set by your verifyToken middleware
-    let user = await userModel.findById(req.loginUser._id).select("-password"); // Exclude password from the response
-    
-    if (!user) {
-      return res.status(404).json({ message: "user not found" });
+//this is used to get the login user 
+
+const getLoginUser  = async ( req,res) =>{
+
+    try {
+
+        let loginUser = await userModel.findById(req.loginUser._id).select("-password"); //fetch user but not his pasword 
+
+        if(loginUser){
+
+            res.status(200).json({messgae:"user found",user:loginUser});
+        }else{
+
+            res.status(404).json({message:"user not founf"});
+        }
+
+
+    }catch(err){
+
+        res.status(500).json({message:"some error occured ",err:err});
     }
+}
 
-    res.status(200).json({ user });
 
-  } catch (err) {
-    res.status(500).json({ message: "some error in fetching user", error: err });
-  }
-};
-
-module.exports = { userSignup, userLogin, getMe }; 
+module.exports = { userSignup, userLogin,getLoginUser}; 
 
 
 

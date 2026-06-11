@@ -68,7 +68,7 @@ const userSignup = async (req,res)=>{
         })
 
 
-        res.status(201).json({message:"account created successfully"});
+        res.status(200).json({message:"account created successfully"});
 
 
     }

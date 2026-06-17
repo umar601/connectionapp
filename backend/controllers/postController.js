@@ -53,7 +53,7 @@ let showPost = async(req,res)=>{
 
     try{
 
-        let allPost = await postModel.find({});
+        let allPost = await postModel.find({}).populate("owner");
 
         res.status(200).json({message:"post fecthed succcessfully",allPost:allPost});
 

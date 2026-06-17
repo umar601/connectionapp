@@ -10,12 +10,18 @@ const middlewares = (app)=>{
     app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());
     app.use(cors({
-        origin:"http://localhost:5173",
+        origin:true,
         credentials:true
 
     }))
 
+    // console.log("middleware is working")
+    
+
     app.use((req,res,next)=>{
+
+    // console.log(req.cookies.currentUser)
+    // console.log(req.cookies.token)
 
         req.loginUser = req.cookies.currentUser;
         req.token  = req.cookies.token; 
@@ -42,6 +48,7 @@ let verifyToken = async(req,res,next)=>{
 
 
     try{
+
 
     if(!req.token){
 

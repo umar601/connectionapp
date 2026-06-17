@@ -64,7 +64,7 @@ const userSignup = async (req,res)=>{
 
         res.cookie("currentUser",newUser,{
                 httpOnly:true,
-                maxAge:2*60*1000           //for one hour 
+                maxAge:2*60*1000           
         })
 
 
@@ -135,16 +135,17 @@ const userLogin  = async (req,res) => {
 
             res.cookie("token",generatedToken,{
                 httpOnly:true,
-                maxAge:2*60*1000            //for one hour 
+                maxAge:2*60*1000            
             })
 
             //storing user in cookie
 
             res.cookie("currentUser",isUserFound,{
                 httpOnly:true,
-                maxAge:2*60*1000           //for one hour 
+                maxAge:2*60*1000        
             })
 
+           
             // login succesfull
 
             res.status(200).json({message:"user login successful",token:generatedToken});

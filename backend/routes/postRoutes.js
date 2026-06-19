@@ -7,7 +7,7 @@ const express = require("express");
 
 const postRouter = express.Router();
 
-const {addPost, showPost,seePostUserWise,deletPost} = require("../controllers/postController");
+const {addPost, showPost,seePostUserWise,deletPost,updatePost} = require("../controllers/postController");
 
 const jwt = require("jsonwebtoken");
 
@@ -30,6 +30,10 @@ postRouter
 
 postRouter
 .delete("/post/:userId/:postId",verifyToken,authorizeRoute,deletPost);
+
+
+postRouter
+.patch("/post/:postId",verifyToken,updatePost)
 
 
 

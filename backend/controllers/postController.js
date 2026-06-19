@@ -53,7 +53,7 @@ let showPost = async(req,res)=>{
 
     try{
 
-        let allPost = await postModel.find({}).populate("owner");
+        let allPost = await postModel.find({}).populate("owner").populate("comments")
 
         res.status(200).json({message:"post fecthed succcessfully",allPost:allPost});
 
@@ -180,5 +180,38 @@ let deletPost = async (req,res)=>{
 }
 
 
-module.exports = {addPost,showPost,seePostUserWise,deletPost};
+let updatePost = async (req,res) =>{
+
+    // try{
+
+    // console.log(req.params)
+
+        let updatepost = await postModel.findByIdAndUpdate(
+            req.params.postId,
+            {likes:req.body.likes}
+            
+        )
+
+        if(!updatepost){
+
+            res.status(404).json({message:"post not found"})
+
+        }
+
+        res.status(200).json({message:"updated sucessfully"})
+
+
+
+
+    // }catch(err){
+
+    //     res.status(500).json({message:"error in updating post",error:err})
+
+    // }
+
+
+}
+
+
+module.exports = {addPost,showPost,seePostUserWise,deletPost,updatePost};
 

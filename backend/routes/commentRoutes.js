@@ -12,7 +12,7 @@ let {authorizeRoute,verifyToken} = require("../middlewares/middlewares");
 
 
 commentRouter
-.post("/post/comment/:userId/:postId",verifyToken,addComment)
+.post("/post/comment/:postId",verifyToken,addComment)
 
 
 // seeCommentPostWise

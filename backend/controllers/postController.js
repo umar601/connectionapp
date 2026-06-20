@@ -53,7 +53,9 @@ let showPost = async(req,res)=>{
 
     try{
 
-        let allPost = await postModel.find({}).populate("owner").populate("comments")
+        let allPost = await postModel.find({}).populate("owner").populate({
+            path:"comments",
+            populate:{path:"owner"}})
 
         res.status(200).json({message:"post fecthed succcessfully",allPost:allPost});
 

@@ -15,7 +15,7 @@ let addComment = async(req,res)=>{
 
     let postToaddComment = await postModel.findById(req.params.postId);
 
-    let userToAddComment = await userModel.findById(req.params.userId);
+    let userToAddComment = await userModel.findById(req.loginUser._id);  //need to check weather the user is login or not
 
 
     // if not found send error
@@ -30,8 +30,8 @@ let addComment = async(req,res)=>{
     let commentToAdd = await commentModel.insertOne(
         {
             content:req.body.content,
-            owner:req.loginUser,
-            post:postToaddComment
+            owner:req.loginUser._id,
+            post:postToaddComment._id
         }
     )
 

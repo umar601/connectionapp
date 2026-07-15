@@ -148,7 +148,7 @@ const userLogin  = async (req,res) => {
            
             // login succesfull
 
-            res.status(200).json({message:"user login successful",token:generatedToken});
+            res.status(200).json({message:"user login successful",token:generatedToken,id:isUserFound._id});
 
             }else{
 

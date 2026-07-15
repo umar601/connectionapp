@@ -6,13 +6,11 @@
 let commentModel = require("../models/commentModel");
 let postModel = require("../models/postModel");
 let userModel = require("../models/userModel");
-
-
 let addComment = async(req,res)=>{
 
 
-    //checking weather the user or post found or not 
 
+    //checking weather the user or post found or not 
     let postToaddComment = await postModel.findById(req.params.postId);
 
     let userToAddComment = await userModel.findById(req.loginUser._id);  //need to check weather the user is login or not
@@ -89,16 +87,20 @@ let deleteComment = async(req,res)=>{
 
     //post/comment/commentid
 
+    // console.log("delete comment called");
+
     try{
 
 
         //checking weather comment exit or not 
 
+        // console.log(req.params.commentId)
+
     let commentToDelete = await commentModel.findById(req.params.commentId);
 
     if(!commentToDelete){
 
-        return res.status(500).json({message:"something wrong in finding comment"});
+        return res.status(404).json({message:"something wrong in finding comment"});
     }
 
     //find post and user to update
@@ -106,6 +108,11 @@ let deleteComment = async(req,res)=>{
     let postToRemoveComment = await postModel.findById(commentToDelete.post);
 
     let userToRemoveComment = await userModel.findById(commentToDelete.owner);
+
+    if(!postToRemoveComment||!userToRemoveComment){
+
+        return res.status(404).json({message:"something wrong in finding post and user"});
+    }
 
 
     //deleteing comment
@@ -142,12 +149,16 @@ let deleteComment = async(req,res)=>{
 
     // if not found send error
 
+   
+
 
     res.status(200).json({message:"comment Deleted Sucessfully"});
 
 
 
     }catch(err){
+
+        console.log("errooro")
 
         res.status(500).json({message:"some error in deleteing the comments",err,err});
     }

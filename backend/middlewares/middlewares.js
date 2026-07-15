@@ -46,6 +46,10 @@ let verifyToken = async(req,res,next)=>{
 
     //if token not exit means the user is not verifie
 
+    // console.log("verify token called")
+
+    // console.log(req.method, req.originalUrl);
+
 
     try{
 
@@ -80,17 +84,26 @@ let verifyToken = async(req,res,next)=>{
 
 let authorizeRoute = (req,res,next)=>{
 
+
+    // console.log("authorize route called")
+
+    // console.log(req.method, req.originalUrl);
+
     try{
 
         let loginUser = req.loginUser;
 
         // console.log(req.body.userId)
         // console.log(loginUser)
+        
 
         if(loginUser._id==req.params.userId||loginUser._id==req.body.userId){
 
+            // console.log("matched")
+
             next()
         }else{
+            // console.log("not")
             res.status(500).json({message:"user is not authorize "});
         }
 
@@ -98,6 +111,7 @@ let authorizeRoute = (req,res,next)=>{
     }catch(err){
 
         // next(err);
+        console.log(err)
         res.status(500).json({message:"some error in authorization",error:err});
     }
 }

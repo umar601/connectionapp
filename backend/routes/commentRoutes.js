@@ -18,13 +18,13 @@ commentRouter
 // seeCommentPostWise
 
 commentRouter
-.get("/post/comment/:postId/",verifyToken,seeCommentPostWise)
+.get("/post/comment/:postId",verifyToken,seeCommentPostWise)
 
 
 // deleteComment
 
 
 commentRouter
-.delete("/post/comment/:userId/:commentId",verifyToken,authorizeRoute,deleteComment)
+.delete("/post/comment/:commentId/:userId",verifyToken,authorizeRoute,deleteComment)
 
 module.exports = commentRouter;

@@ -35,5 +35,31 @@ export const fetchPost = ()=>{
     return api.get("/post")
 }
 
+export const addPost = (data)=>{
 
+    return api.post("/post",data)
+}
+
+export const updatePost = (postId,data)=>{
+
+    return api.patch(`/post/${postId}`,data);
+}
+
+export const addComment = (postId,data)=>{
+
+    return api.post(`/post/comment/${postId}`,data);
+}
+
+export const deleteComment = (commentId,userId)=>{
+
+    // console.log("W")
+
+    return api.delete(`/post/comment/${commentId}/${userId}`);
+}
+
+
+export const seeRecievedRequests = (userId)=>{
+
+    return api.get(`/request/recieved/${userId}`)
+}
 

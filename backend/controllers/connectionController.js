@@ -297,6 +297,23 @@ let seeConnections = async(req,res)=>{
 }
 
 
+let getAllUsers = async(req,res)=>{
 
-module.exports = {sendRequest,acceptRequest,rejectRequest,seeSendRequest,seeRequestRecieved,seeConnections};
+    try{
+
+        let user = await userModel.find({}).select("username _id");
+
+        res.status(200).json({message:"user fetchede successfully ",user});
+
+    }catch(err){
+
+        res.status(500).json({message:"some error in fethching user",err:err})
+
+    }
+
+}
+
+
+
+module.exports = {sendRequest,acceptRequest,rejectRequest,seeSendRequest,seeRequestRecieved,seeConnections,getAllUsers};
 

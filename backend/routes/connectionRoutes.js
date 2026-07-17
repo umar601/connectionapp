@@ -9,7 +9,7 @@ let express = require("express");
 
 let connectionRouter = express.Router();
 
-let {sendRequest,acceptRequest,rejectRequest,seeSendRequest,seeRequestRecieved,seeConnections} = require("../controllers/connectionController");
+let {sendRequest,acceptRequest,rejectRequest,seeSendRequest,seeRequestRecieved,seeConnections,getAllUsers} = require("../controllers/connectionController");
 
 let {authorizeRoute,verifyToken} = require("../middlewares/middlewares");
 
@@ -29,6 +29,8 @@ connectionRouter.get("/request/send/:userId",verifyToken,authorizeRoute,seeSendR
 connectionRouter.get("/request/recieved/:userId",verifyToken,authorizeRoute,seeRequestRecieved);
 
 connectionRouter.get("/request/connection/:userId",verifyToken,authorizeRoute,seeConnections);
+
+connectionRouter.get("/home/user/:userId",verifyToken,authorizeRoute,getAllUsers);
 
 module.exports = connectionRouter;
 

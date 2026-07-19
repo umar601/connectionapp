@@ -46,10 +46,23 @@ let sendRequest = async (req,res)=>{
         sendBy:sendBy._id}
     )
 
+    let isRequestFoundsecond = await connectionModel.findOne(
     
+        {sendTo:sendBy._id,
+        sendBy:sendTo._id}
+    )
+
+    let checkingSendByConnection = await userModel.findOne(
+        {connections:sendBy._id}
+    )
+
+    // console.log(checkingSendByConnection)
+    // console.log(isRequestFoundsecond)
     // console.log(isRequestFound)
 
-    if(isRequestFound){
+
+
+    if(isRequestFound||isRequestFoundsecond||checkingSendByConnection){
 
         return res.status(404).json({message:"request already exist "});
     }
@@ -188,8 +201,8 @@ let rejectRequest = async(req,res)=>{
 
         await connectionModel.findOneAndDelete(
         
-                {sendTo:sendTo},
-                {sendBy:sendBy}
+                {sendTo:sendTo,
+                sendBy:sendBy}
             )
 
 
@@ -286,7 +299,9 @@ let seeConnections = async(req,res)=>{
 
     try{
 
-        let sendBy = await userModel.findById(req.params.userId)
+        let sendBy = await userModel.findById(req.params.userId).populate("connections")
+
+        // console.log(sendBy)
 
         if(!sendBy){
 
@@ -295,9 +310,9 @@ let seeConnections = async(req,res)=>{
 
     let connections = sendBy.connections
 
-    console.log(connections)
+    // console.log(connections)
 
-    res.status(200).json({message:"fecthec successfully ",connections:connections})
+    res.status(200).json({message:"fecthec successfully ",connection:connections})
 
 
     }catch(err){

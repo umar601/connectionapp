@@ -68,7 +68,7 @@ const userSignup = async (req,res)=>{
         })
 
 
-        res.status(200).json({message:"account created successfully"});
+        res.status(200).json({message:"account created successfully",id:newUser._id,username:newUser.username});
 
 
     }
@@ -148,7 +148,7 @@ const userLogin  = async (req,res) => {
            
             // login succesfull
 
-            res.status(200).json({message:"user login successful",token:generatedToken,id:isUserFound._id});
+            res.status(200).json({message:"user login successful",token:generatedToken,id:isUserFound._id,username:isUserFound.username});
 
             }else{
 
@@ -183,7 +183,7 @@ const getLoginUser  = async ( req,res) =>{
             res.status(200).json({messgae:"user found",user:loginUser});
         }else{
 
-            res.status(404).json({message:"user not founf"});
+            res.status(404).json({message:"user not found"});
         }
 
 

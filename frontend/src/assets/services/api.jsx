@@ -63,3 +63,40 @@ export const seeRecievedRequests = (userId)=>{
     return api.get(`/request/recieved/${userId}`)
 }
 
+
+export const getAllUsers = (userId)=>{
+
+    return api.get(`/home/user/${userId}`);
+}
+
+
+export const sendRequest = (data)=>{
+
+    return api.post("/request",data);
+}
+
+export const seeRequestSend = (userId)=>{
+
+    return api.get(`/request/send/${userId}`)
+}
+
+
+export const acceptRequest = (data)=>{
+
+    return api.post("/request/accept",data)
+
+}
+
+export const rejectRequest = (data)=>{
+
+    return api.post("/request/reject",data)
+
+}
+
+
+export const seeConnections = (userId)=>{
+
+    return api.get(`/request/connection/${userId}`)
+
+}
+

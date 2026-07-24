@@ -4,6 +4,7 @@ import { userLogin } from "../services/api";
 import { useNavigate,Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import ProtectedRoute from "../components/protectedRoute";
+import "../../assets/styling/login.css"
 
 export default function Login() {
 
@@ -64,27 +65,59 @@ export default function Login() {
 
 
   return (
-    <>
+  <div className="login-container">
+    <div className="login-wrapper">
+      <h1 className="login-title">Welcome Back</h1>
+      <p className="login-subtitle">Sign in to continue to your account</p>
 
-    <h1>Login</h1>
+      {response && <div className="success-message">{response}</div>}
+      {error && <div className="error-message">{error}</div>}
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
 
-    {response?<h1>{response}</h1>:null}
-    {error?<h1>{error}</h1>:null}
-    {errorMessage?<h1>{errorMessage}</h1>:null}
-    {/* {protectedMessage?<h1>{protectedMessage}</h1>:null} */}
+      <form onSubmit={handleOnSubmit} className="login-form">
+        <div className="form-group">
+          <label className="form-label">Username</label>
+          <input 
+            className="login-input"
+            placeholder="Enter your username" 
+            name="username" 
+            onChange={handleOnchange} 
+            value={data.username}
+          />
+        </div>
+        
+        <div className="form-group">
+          <label className="form-label">Password</label>
+          <input 
+            className="login-input"
+            type="password"
+            placeholder="Enter your password" 
+            name="password" 
+            onChange={handleOnchange} 
+            value={data.password}
+          />
+        </div>
+        
+        <button 
+          className="login-button" 
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <span className="spinner"></span>
+              Signing In...
+            </>
+          ) : (
+            "Sign In"
+          )}
+        </button>
+      </form>
 
-    <nav>
-
-      {/* <Link to={"/login"}>login</Link> */}
-      <Link to={"/signup"}>not have have account?sigup</Link>
-
-    </nav>
-
-    <form onSubmit={handleOnSubmit} >
-        <input placeholder="enter username" name="username" onChange={handleOnchange} value={data.username}></input>
-        <input placeholder="enter password" name="password" onChange={handleOnchange}  value={data.password}></input>
-        <button>{loading?"...login innnn":"login"}</button>
-    </form>
-    </>
-  )
-}
+      <nav className="login-nav">
+        <Link to={"/signup"} className="login-link">
+          Don't have an account? Sign up
+        </Link>
+      </nav>
+    </div>
+  </div>
+)}

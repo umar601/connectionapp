@@ -3,71 +3,78 @@ import { Link } from "react-router-dom";
 import { userSignUp } from "../services/api";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-
+import "../../assets/styling/signup.css"; 
 
 export default function SignUp() {
 
-  let [data,setData] = useState({username:"",password:""})
+  let [data, setData] = useState({username: "", password: ""});
   let [error, setError] = useState("");
-
-  let {login} = useAuth();
-
+  let { login } = useAuth();
   let navigate = useNavigate();
 
-
-  async function  handleOnSubmit(event) {
-
+  async function handleOnSubmit(event) {
     event.preventDefault();
-
-    await userSignUp(data).then((res)=>{
-
-      if(res.status==200){
+    await userSignUp(data).then((res) => {
+      if (res.status == 200) {
         login(res.data);
         navigate("/home");
       }
-
-    }).catch((err)=>{
-
-      // console.log(err.status);
-      if(err.status==409){
-        
-        setError("account already exist");
+    }).catch((err) => {
+      if (err.status == 409) {
+        setError("Account already exists");
+      } else if (err.status == 500) {
+        setError("Some error in setting up account");
       }
-      else if (err.status==500){
-
-        setError("some error in setting up account");
-
-      }
-
-    })
-    
+    });
   }
 
-  function handleOnChnage (event){
-
-    setData({...data,[event.target.name]:event.target.value});
-
-
+  function handleOnChange(event) {
+    setData({...data, [event.target.name]: event.target.value});
   }
+
   return (
-    <>
+    <div className="signup-container">
+      <div className="signup-wrapper">
+        <h1 className="signup-title">Create Account</h1>
+        <p className="signup-subtitle">Join our community today</p>
 
-      <h1>signup</h1>
+        {error && <div className="error-message">{error}</div>}
 
-      {error?<h1>{error}</h1>:null}
-  
-        <Link to={"/login"}>already have account?login</Link>
+        <form onSubmit={handleOnSubmit} className="signup-form">
+          <div className="form-group">
+            <label className="form-label">Username</label>
+            <input 
+              className="signup-input"
+              type="text" 
+              placeholder="Choose a username" 
+              name="username" 
+              value={data.username} 
+              onChange={handleOnChange}
+            />
+          </div>
 
-        <form onSubmit={handleOnSubmit} >
+          <div className="form-group">
+            <label className="form-label">Password</label>
+            <input 
+              className="signup-input"
+              type="password" 
+              placeholder="Create a password" 
+              name="password" 
+              value={data.password} 
+              onChange={handleOnChange}
+            />
+            <small className="password-hint">Must be at least 8 characters</small>
+          </div>
 
-          <input type="text" placeholder="enter your username ..."  name="username" value={data.username} onChange={handleOnChnage}/>
-
-          <input type="text" placeholder="enter your password ..."  name="password" value={data.password} onChange={handleOnChnage}/>
-
-          <button>signUp</button>
-
+          <button className="signup-button">Create Account</button>
         </form>
-        
-    </>
+
+        <nav className="signup-nav">
+          <Link to={"/login"} className="signup-link">
+            Already have an account? Sign in
+          </Link>
+        </nav>
+      </div>
+    </div>
   );
 }

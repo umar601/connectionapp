@@ -197,7 +197,6 @@
 // module.exports = { userSignup, userLogin,getLoginUser}; 
 
 
-// authController.js - FIXED VERSION
 const userModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -225,25 +224,15 @@ const userSignup = async (req, res) => {
             let generatedToken = jwt.sign(
                 { data: tokenData },
                 "secretKey",
-                { expiresIn: "7d" } // ✅ CHANGE: 1h → 7d
+                { expiresIn: "7d" }
             );
 
-            // ✅ FIX 1: Store token with longer expiry
+            // ✅ ONLY send token cookie - NO currentUser cookie
             res.cookie("token", generatedToken, {
                 httpOnly: true,
-                maxAge: 7 * 24 * 60 * 60 * 1000 // ✅ CHANGE: 2 minutes → 7 days
-            });
-
-            // ✅ FIX 2: Remove password before storing in cookie
-            const userWithoutPassword = {
-                _id: newUser._id,
-                username: newUser.username
-            };
-
-            // ✅ FIX 3: Make currentUser readable by frontend
-            res.cookie("currentUser", userWithoutPassword, {
-                httpOnly: false, // ✅ CHANGE: true → false
-                maxAge: 7 * 24 * 60 * 60 * 1000 // ✅ CHANGE: 2 minutes → 7 days
+                secure: true,
+                sameSite: "None",
+                maxAge: 7 * 24 * 60 * 60 * 1000
             });
 
             res.status(200).json({
@@ -269,36 +258,25 @@ const userLogin = async (req, res) => {
             if (isPasswordMatched) {
                 let tokenData = {
                     id: isUserFound._id,
-                    username: req.body.username
+                    username: isUserFound.username
                 };
 
                 let generatedToken = jwt.sign(
                     { data: tokenData },
                     "secretKey",
-                    { expiresIn: "7d" } // ✅ CHANGE: 1h → 7d
+                    { expiresIn: "7d" }
                 );
 
-                // ✅ FIX 1: Store token with longer expiry
+                // ✅ ONLY send token cookie - NO currentUser cookie
                 res.cookie("token", generatedToken, {
                     httpOnly: true,
-                    maxAge: 7 * 24 * 60 * 60 * 1000 // ✅ CHANGE: 2 minutes → 7 days
-                });
-
-                // ✅ FIX 2: Remove password before storing in cookie
-                const userWithoutPassword = {
-                    _id: isUserFound._id,
-                    username: isUserFound.username
-                };
-
-                // ✅ FIX 3: Make currentUser readable by frontend
-                res.cookie("currentUser", userWithoutPassword, {
-                    httpOnly: false, // ✅ CHANGE: true → false
-                    maxAge: 7 * 24 * 60 * 60 * 1000 // ✅ CHANGE: 2 minutes → 7 days
+                    secure: true,
+                    sameSite: "None",
+                    maxAge: 7 * 24 * 60 * 60 * 1000
                 });
 
                 res.status(200).json({
                     message: "user login successful",
-                    // ✅ REMOVED: token from response (it's in cookie now)
                     id: isUserFound._id,
                     username: isUserFound.username
                 });
@@ -315,7 +293,8 @@ const userLogin = async (req, res) => {
 
 const getLoginUser = async (req, res) => {
     try {
-        let loginUser = await userModel.findById(req.loginUser._id).select("-password");
+        // ✅ Use req.loginUser.id (from JWT, NOT from cookie)
+        let loginUser = await userModel.findById(req.loginUser.id).select("-password");
         if (loginUser) {
             res.status(200).json({ message: "user found", user: loginUser });
         } else {
@@ -326,10 +305,7 @@ const getLoginUser = async (req, res) => {
     }
 }
 
-
-
 module.exports = { userSignup, userLogin, getLoginUser };
-
 
 
 

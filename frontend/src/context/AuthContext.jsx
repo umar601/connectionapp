@@ -76,9 +76,8 @@
 
 // export const useAuth = ()=>useContext(AuthContext);
 
-// context/AuthContext.js
+
 import { createContext, useState, useEffect, useContext } from "react";
-import Cookies from 'js-cookie';
 import { fetechLogin } from "../assets/services/api";
 
 const AuthContext = createContext();
@@ -90,19 +89,20 @@ export const AuthProvider = ({ children }) => {
     const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
-        // ✅ Read user from cookie
-        const currentUser = Cookies.get('currentUser');
-        
-        if (currentUser) {
-            try {
-                setUser(JSON.parse(currentUser));
+        // ✅ NO cookies - just call /me with token
+        fetechLogin()
+            .then((res) => {
+                setUser(res.data.user);
                 setMessage("User verified");
-            } catch (error) {
-                console.error('Error parsing user cookie:', error);
+            })
+            .catch((err) => {
+                console.error('Auth error:', err);
                 setUser(null);
-            }
-        }
-        setChecking(false);
+                setErrorMessage(err.response?.data?.message || 'Please login');
+            })
+            .finally(() => {
+                setChecking(false);
+            });
     }, []);
 
     const login = (userData) => {
@@ -112,9 +112,12 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         setUser(null);
-        Cookies.remove('token');
-        Cookies.remove('currentUser');
+        // Cookie will expire naturally or you can add a logout endpoint
     };
+
+    if (checking) {
+        return <h1>Loading...</h1>;
+    }
 
     return (
         <AuthContext.Provider value={{ login, logout, user, checking, message, errorMessage }}>
